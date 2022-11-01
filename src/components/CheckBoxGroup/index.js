@@ -1,21 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 import types from '../../utils/commonTypes'
+import withDataGroup from "../HOC/withDataGroup";
 
-class CheckBoxGroup extends Component {
 
-    // 设置属性默认值
-    static defaultProps = {
-        datas: [],
-        chooseDatas: []
-    }
-
-    // 配置属性类型
+class CheckBox extends Component {
     static propTypes = {
-        datas: types.groupDatas.isRequired,
         name: PropTypes.string.isRequired,
-        chooseDatas: types.chooseDatas,
-        onChange: PropTypes.func
+        info: types.singleData.isRequired,
+        chooseDatas: types.chooseDatas.isRequired,
+        onChange: PropTypes.func,
     }
 
     handleChange = (e) => {
@@ -25,36 +19,21 @@ class CheckBoxGroup extends Component {
         } else {
             newArr = this.props.chooseDatas.filter(it => it !== e.target.value)
         }
-        this.props.onChange && this.props.onChange(newArr, this.props.name, e)
+        this.props.onChange && this.props.onChange(newArr)
     }
-
-    /**
-     * 获取一组多选框
-    */
-    getLovesCheckBoxs() {
-        return this.props.datas.map(it => (
-            <label key={it.value}>
-                <input
-                    type="checkbox"
-                    name={this.props.name}
-                    value={it.value}
-                    checked={this.props.chooseDatas.includes(it.value)}
-                    onChange={this.handleChange}
-                />
-                {it.text}
-            </label>
-        ))
-    }
-
 
     render() {
-        const bs = this.getLovesCheckBoxs()
-        return (
-            <div>
-                {bs}
-            </div>
-        );
+        return (<label>
+            <input
+                type="checkbox"
+                name={this.props.name}
+                value={this.props.info.value}
+                checked={this.props.chooseDatas.includes(this.props.info.value)}
+                onChange={this.handleChange}
+            />
+            {this.props.info.text}
+        </label>)
     }
 }
 
-export default CheckBoxGroup;
+export default withDataGroup(CheckBox);
